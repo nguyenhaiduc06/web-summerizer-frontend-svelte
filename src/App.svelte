@@ -9,17 +9,22 @@
     URLInput,
   } from "./lib/constants";
   import axios from "axios";
+  import EmptyState from "./components/EmptyState.svelte";
+  import RawTextInputSection from "./components/RawTextInputSection.svelte";
+  import URLInputSection from "./components/URLInputSection.svelte";
+  import FileInputSection from "./components/FileInputSection.svelte";
 
   let rawText;
   let url;
-  let file;
+  let parsedArticleFromURL;
+  let files;
+  let parsedArticleFromFile;
   let article;
 
   let parsingOriginalArticleFromURL;
   let summerizing;
 
-  let summerizedText;
-  $: console.log(summerizedText);
+  let summerizedText: string;
 
   let inputs = [RawTextInput, URLInput, FileInput];
   let input = RawTextInput;
@@ -36,13 +41,15 @@
         url,
       });
       parsingOriginalArticleFromURL = false;
-      return res.data.text;
+      parsedArticleFromURL = res.data.text;
+      return parsedArticleFromURL;
     }
     if (input == FileInput) {
       const fr = new FileReader();
-      fr.readAsText(file[0]);
+      fr.readAsText(files[0]);
       fr.onload = () => {
-        return fr.result;
+        parsedArticleFromFile = fr.result.toString();
+        return parsedArticleFromFile;
       };
     }
   }
@@ -91,38 +98,18 @@
   </div>
   <div class="flex-1 grid grid-cols-2 gap-4 p-4">
     <div class="w-full h-full flex flex-col gap-1">
-      {#if input == RawTextInput}
-        <p>Enter raw text</p>
-        <textarea
-          bind:value={rawText}
-          class="bg-white rounded border-gray-200 w-full flex-1"
-        />
-      {:else if input == URLInput}
-        <p>Enter URL</p>
-        <input type="text" bind:value={url} class="border-gray-200 rounded" />
-        <p>Parsed article content</p>
-        {#if parsingOriginalArticleFromURL}
-          <div class="w-full h-full flex items-center justify-center">
-            <div
-              class="inline-flex px-3 py-1 bg-gray-100 rounded gap-1 text-xl"
-            >
-              <div class="animate-spin inline-flex">
-                <i class="ri-loader-line" />
-              </div>
-              <div>Parsing article from URL</div>
-            </div>
-          </div>
-        {:else}
-          <textarea
-            bind:value={article}
-            class="bg-white rounded border-gray-200 w-full flex-1"
-            contenteditable="false"
-          />
-        {/if}
-      {:else}
-        <p>Upload text file</p>
-        <input bind:files={file} type="file" />
-      {/if}
+      <RawTextInputSection bind:rawText show={input == RawTextInput} />
+      <URLInputSection
+        bind:url
+        {parsedArticleFromURL}
+        parsing={parsingOriginalArticleFromURL}
+        show={input == URLInput}
+      />
+      <FileInputSection
+        bind:files
+        {parsedArticleFromFile}
+        show={input == FileInput}
+      />
     </div>
     <div class="w-full h-full flex flex-col gap-1">
       <p>Summerized article</p>
@@ -135,8 +122,12 @@
             <div>Summerizing</div>
           </div>
         </div>
+      {:else if summerizedText}
+        <div class="border w-full h-full rounded p-4">
+          {summerizedText ?? ""}
+        </div>
       {:else}
-        <div class="border w-full h-full rounded p-4">{summerizedText}</div>
+        <EmptyState />
       {/if}
     </div>
   </div>
