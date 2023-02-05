@@ -32,7 +32,7 @@
     }
     if (input == URLInput) {
       parsingOriginalArticleFromURL = true;
-      const res = await axios.post("https://localhost:3001/parsed-from-url", {
+      const res = await axios.post("http://localhost:3001/parsed-from-url", {
         url,
       });
       parsingOriginalArticleFromURL = false;
@@ -50,7 +50,7 @@
   async function summerize() {
     article = await getArticle();
 
-    const endpoint = "https://localhost:3001/summerized";
+    const endpoint = "http://localhost:3001/summerized";
 
     summerizing = true;
 
