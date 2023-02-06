@@ -34,6 +34,20 @@
   let summerizeLengths = [SummerizeShort, SummerizeMedium, SummerizeLong];
   let summerizeLength = SummerizeMedium;
 
+  function readFileAsync(file) {
+    return new Promise((resolve, reject) => {
+      let reader = new FileReader();
+
+      reader.onload = () => {
+        resolve(reader.result);
+      };
+
+      reader.onerror = reject;
+
+      reader.readAsText(file);
+    });
+  }
+
   async function getArticle() {
     if (input == RawTextInput) {
       return rawText;
@@ -48,12 +62,8 @@
       return parsedArticleFromURL;
     }
     if (input == FileInput) {
-      const fr = new FileReader();
-      fr.readAsText(files[0]);
-      fr.onload = () => {
-        parsedArticleFromFile = fr.result.toString();
-        return parsedArticleFromFile;
-      };
+      parsedArticleFromFile = await readFileAsync(files[0]);
+      return parsedArticleFromFile;
     }
   }
 
