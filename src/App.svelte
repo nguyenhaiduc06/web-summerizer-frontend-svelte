@@ -88,14 +88,14 @@
       </div>
 
       <div class="flex flex-col gap-1">
-        <p class="text-sm">Summerize length</p>
+        <p class="text-sm">Summarize length</p>
         <Tabs options={summerizeLengths} bind:selected={summerizeLength} />
       </div>
       <button
         class={`bg-blue-500 text-white text-sm font-medium rounded px-5 py-3 inline-flex items-center gap-1`}
         on:click={summerize}
       >
-        <p>Summerize</p>
+        <p>Summarize</p>
       </button>
     </div>
   </div>
@@ -115,7 +115,7 @@
       />
     </div>
     <div class="w-full h-full flex flex-col gap-1">
-      <p>Summerized article</p>
+      <p>Summarized article</p>
       {#if summerizing}
         <div class="w-full h-full flex items-center justify-center">
           <div class="inline-flex px-3 py-1 bg-gray-100 rounded gap-1 text-xl">
