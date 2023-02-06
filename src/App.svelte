@@ -14,6 +14,9 @@
   import URLInputSection from "./components/URLInputSection.svelte";
   import FileInputSection from "./components/FileInputSection.svelte";
 
+  // const END_POINT = "http://localhost:3001/";
+  const END_POINT = "https://web-summarizer-backend.vercel.app/";
+
   let rawText;
   let url;
   let parsedArticleFromURL;
@@ -37,7 +40,7 @@
     }
     if (input == URLInput) {
       parsingOriginalArticleFromURL = true;
-      const res = await axios.post("http://localhost:3001/parsed-from-url", {
+      const res = await axios.post(`${END_POINT}parsed-from-url`, {
         url,
       });
       parsingOriginalArticleFromURL = false;
@@ -57,7 +60,7 @@
   async function summerize() {
     article = await getArticle();
 
-    const endpoint = "http://localhost:3001/summerized";
+    const endpoint = `${END_POINT}summerized`;
 
     summerizing = true;
 
