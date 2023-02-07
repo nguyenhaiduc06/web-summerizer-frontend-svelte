@@ -14,8 +14,8 @@
   import URLInputSection from "./components/URLInputSection.svelte";
   import FileInputSection from "./components/FileInputSection.svelte";
 
-  const END_POINT = "http://localhost:3001/";
-  // const END_POINT = "https://web-summarizer-backend.vercel.app/";
+  // const END_POINT = "http://localhost:3001/";
+  const END_POINT = "https://web-summarizer-backend.vercel.app/";
 
   let rawText;
   let url;
@@ -79,7 +79,10 @@
         article,
         length: summerizeLength.toLowerCase(),
       })
-      .then((res) => (summerizedText = res.data.summerizedArticle))
+      .then((res) => {
+        console.log(res.data);
+        summerizedText = res.data.summerizedArticle;
+      })
       .catch((e) => {
         alert(e);
       })
